@@ -27,7 +27,8 @@
 
 namespace model_potential {
 
-double V(QuantumDefect const &qd, double x) {
+double V(QuantumDefect const &qd, double x)
+{
     double Z_l =
         1 + (qd.Z - 1) * std::exp(-qd.a1 * x) - x * (qd.a3 + qd.a4 * x) * std::exp(-qd.a2 * x);
     double V_c = -Z_l / x;
