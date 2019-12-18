@@ -7,3 +7,6 @@
 [submodule "libpairinteraction/eigen"]
 	path = libs/eigen
 	url = git://github.com/eigenteam/eigen-git-mirror.git
+[submodule "libs/fmt"]
+	path = libs/fmt
+	url = git://github.com/fmtlib/fmt

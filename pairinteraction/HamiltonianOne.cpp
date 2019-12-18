@@ -18,10 +18,11 @@
  */
 
 #include "HamiltonianOne.h"
+
+#include <fmt/format.h>
+
 #include <stdexcept>
 #include <utility>
-
-#include <boost/format.hpp>
 
 HamiltonianOne::HamiltonianOne(const Configuration &config, boost::filesystem::path &path_cache,
                                std::shared_ptr<BasisnamesOne> basis_one)
@@ -40,7 +41,7 @@ void HamiltonianOne::changeToSpherical(double val_x, double val_y, double val_z,
                                        double &val_m, double &val_0) {
     if (val_y != 0) {
         std::string msg("For fields with non-zero y-coordinates, a complex data type is needed.");
-        std::cout << boost::format(">>ERR%s") % msg << std::endl;
+        std::cout << fmt::format(">>ERR{:s}", msg) << std::endl;
         throw std::runtime_error(msg);
     }
     val_p = -val_x / std::sqrt(2);
@@ -141,7 +142,7 @@ void HamiltonianOne::build() {
 
     std::cout << "One-atom Hamiltonian, basis size with restrictions: " << basis->size()
               << std::endl;
-    std::cout << boost::format(">>BAS%7d") % basis->size() << std::endl;
+    std::cout << fmt::format(">>BAS{:7d}", basis->size()) << std::endl;
 
     // === Save single atom basis ===
     std::cout << "One-atom Hamiltonian, save single atom basis" << std::endl;
@@ -159,7 +160,7 @@ void HamiltonianOne::build() {
     path_basis /= "basis_one_" + uuid + ".csv";
     basis->save(path_basis.string());
 
-    std::cout << boost::format(">>STA %s") % path_basis.string() << std::endl;
+    std::cout << fmt::format(">>STA {:s}", path_basis.string()) << std::endl;
 
     ////////////////////////////////////////////////////////
     ////// Construct atom-field interaction ////////////////
@@ -448,7 +449,7 @@ void HamiltonianOne::build() {
     ////// Loop through steps //////////////////////////////
     ////////////////////////////////////////////////////////
 
-    std::cout << boost::format(">>TOT%7d") % nSteps << std::endl;
+    std::cout << fmt::format(">>TOT{:7d}", nSteps) << std::endl;
 
     auto nSteps_i = static_cast<int>(nSteps);
 
@@ -605,8 +606,7 @@ void HamiltonianOne::build() {
             // Stdout: Hamiltonian assembled
 #pragma omp critical(textoutput)
             {
-                std::cout << boost::format(">>DIM%7d") % totalmatrix.num_basisvectors()
-                          << std::endl;
+                std::cout << fmt::format(">>DIM{:7d}", totalmatrix.num_basisvectors()) << std::endl;
                 std::cout << "One-atom Hamiltonian, " << step + 1 << ". Hamiltonian assembled"
                           << std::endl;
             }
@@ -618,8 +618,8 @@ void HamiltonianOne::build() {
             // Stdout: Hamiltonian diagonalized
 #pragma omp critical(textoutput)
             {
-                std::cout << boost::format(">>OUT%7d%7d%7d%7d %s") % (step + 1) % step % 1 % 0 %
-                        path.string()
+                std::cout << fmt::format(">>OUT{:7d}{:7d}{:7d}{:7d} {:s}", (step + 1), step, 1, 0,
+                                         path.string())
                           << std::endl;
                 std::cout << "One-atom Hamiltonian, " << step + 1 << ". Hamiltonian diagonalized"
                           << std::endl;
@@ -628,10 +628,9 @@ void HamiltonianOne::build() {
             // Stdout: Hamiltonian loaded
 #pragma omp critical(textoutput)
             {
-                std::cout << boost::format(">>DIM%7d") % totalmatrix.num_basisvectors()
-                          << std::endl;
-                std::cout << boost::format(">>OUT%7d%7d%7d%7d %s") % (step + 1) % step % 1 % 0 %
-                        path.string()
+                std::cout << fmt::format(">>DIM{:7d}", totalmatrix.num_basisvectors()) << std::endl;
+                std::cout << fmt::format(">>OUT{:7d}{:7d}{:7d}{:7d} {:s}", (step + 1), step, 1, 0,
+                                         path.string())
                           << std::endl;
                 std::cout << "One-atom Hamiltonian, " << step + 1 << ". Hamiltonian loaded"
                           << std::endl;

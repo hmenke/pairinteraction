@@ -98,6 +98,9 @@ list(APPEND LIBRARIES wignerSymbols)
 # Include Eigen
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/libs/eigen)
 
+include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/libs/fmt/include)
+add_definitions(-DFMT_HEADER_ONLY)
+
 find_package(Sqlite3 REQUIRED)
 include_directories(SYSTEM ${SQLITE3_INCLUDE_DIR})
 list(APPEND LIBRARIES ${SQLITE3_LIBRARY})
