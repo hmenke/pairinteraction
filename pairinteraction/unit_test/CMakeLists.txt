@@ -21,10 +21,8 @@ set_directory_properties(PROPERTIES EXCLUDE_FROM_ALL ON)
 # Add current directory to search path
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-# Find the Boost unit test framework
-find_package(Boost REQUIRED COMPONENTS unit_test_framework)
-include_directories(${Boost_INCLUDE_DIRS})
-list(APPEND LIBRARIES ${Boost_LIBRARIES})
+# Find the Catch2 unit test framework
+include_directories(${CMAKE_SOURCE_DIR}/libs/Catch2/single_include)
 
 # To add test cases easier we use the following function
 function(UNIT_TEST)
@@ -37,8 +35,7 @@ function(UNIT_TEST)
   else()
     set_source_files_properties(${UT_SOURCE} PROPERTIES COMPILE_FLAGS "-Wall -Wextra -pedantic -Werror")
   endif()
-  target_link_libraries(${UT_TARGET} ${LIBRARIES} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-  target_compile_definitions(${UT_TARGET} PRIVATE "BOOST_TEST_DYN_LINK=1")
+  target_link_libraries(${UT_TARGET} ${LIBRARIES})
   # Tests are executed in the root directory
   add_test(NAME "cpp.${UT_TARGET}" COMMAND ${UT_TARGET}
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")

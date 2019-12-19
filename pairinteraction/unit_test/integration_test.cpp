@@ -23,8 +23,8 @@
 #include "SystemTwo.h"
 #include "dtypes.h"
 
-#define BOOST_TEST_MODULE Integration test
-#include <boost/test/unit_test.hpp>
+#define CATCH_CONFIG_MAIN
+#include <catch2/catch.hpp>
 
 #include <algorithm>
 #include <boost/archive/text_iarchive.hpp>
@@ -34,6 +34,8 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+
+using Catch::Matchers::WithinAbs;
 
 struct F {
     F() : path_cache(boost::filesystem::temp_directory_path() / boost::filesystem::unique_path()) {
@@ -52,7 +54,7 @@ struct F {
     boost::filesystem::path path_cache;
 };
 
-BOOST_FIXTURE_TEST_CASE(integration_test, F) // NOLINT
+TEST_CASE_METHOD(F, "integration_test") // NOLINT
 {
 
     constexpr bool dump_new_reference_data = false;
@@ -94,8 +96,8 @@ BOOST_FIXTURE_TEST_CASE(integration_test, F) // NOLINT
     system_one.setBfield({{0, 0, 1}});
 
     // Check for correct dimensions
-    BOOST_CHECK_EQUAL(system_one.getNumBasisvectors(), 64);
-    BOOST_CHECK_EQUAL(system_one.getNumStates(), 64);
+    CHECK(system_one.getNumBasisvectors() == 64);
+    CHECK(system_one.getNumStates() == 64);
 
     // Compare current results to the reference data (the results have to be
     // compared before diagonalization as the order of the eigenvectors is not
@@ -118,7 +120,7 @@ BOOST_FIXTURE_TEST_CASE(integration_test, F) // NOLINT
         std::cout << "One-atom system, relative maximum deviation from "
                      "reference Hamiltonian: "
                   << max_diff_hamiltonian << std::endl;
-        BOOST_CHECK_SMALL(max_diff_hamiltonian, tolerance);
+        CHECK_THAT(max_diff_hamiltonian, WithinAbs(0.0, tolerance));
 
         diff = (basis_one - basis_one_reference)
                    .pruned(tolerance, 1) // without pruning, max_diff_hamiltonian
@@ -130,7 +132,7 @@ BOOST_FIXTURE_TEST_CASE(integration_test, F) // NOLINT
         std::cout << "One-atom system, relative maximum deviation from "
                      "reference basis: "
                   << max_diff_basis << std::endl;
-        BOOST_CHECK_SMALL(max_diff_basis, tolerance);
+        CHECK_THAT(max_diff_basis, WithinAbs(0.0, tolerance));
     }
 
     // Diagonalize one-atom system
@@ -158,8 +160,8 @@ BOOST_FIXTURE_TEST_CASE(integration_test, F) // NOLINT
     system_two.setAngle(0.9);
 
     // Check for correct dimensions
-    BOOST_CHECK_EQUAL(system_two.getNumBasisvectors(), 239);
-    BOOST_CHECK_EQUAL(system_two.getNumStates(), 468);
+    CHECK(system_two.getNumBasisvectors() == 239);
+    CHECK(system_two.getNumStates() == 468);
 
     // Compare current results to the reference data (the results have to be
     // compared before diagonalization as the order of the eigenvectors is not
@@ -179,7 +181,7 @@ BOOST_FIXTURE_TEST_CASE(integration_test, F) // NOLINT
         std::cout << "Two-atom system, relative maximum deviation from "
                      "reference Hamiltonian: "
                   << max_diff_hamiltonian << std::endl;
-        BOOST_CHECK_SMALL(max_diff_hamiltonian, tolerance);
+        CHECK_THAT(max_diff_hamiltonian, WithinAbs(0.0, tolerance));
 
         diff = (basis_two - basis_two_reference)
                    .pruned(tolerance, 1) // without pruning, max_diff_hamiltonian
@@ -191,7 +193,7 @@ BOOST_FIXTURE_TEST_CASE(integration_test, F) // NOLINT
         std::cout << "Two-atom system, relative maximum deviation from "
                      "reference basis: "
                   << max_diff_basis << std::endl;
-        BOOST_CHECK_SMALL(max_diff_basis, tolerance);
+        CHECK_THAT(max_diff_basis, WithinAbs(0.0, tolerance));
     }
 
     // Diagonalize two-atom system
@@ -216,7 +218,7 @@ BOOST_FIXTURE_TEST_CASE(integration_test, F) // NOLINT
         // We deliberately crash the test in case we are dumping new
         // data because we want to prevent accidentally dumping new
         // data when running in Travis CI.
-        BOOST_CHECK_MESSAGE(!dump_new_reference_data, "No tests were executed. Only dumping data!");
+        FAIL("No tests were executed. Only dumping data!");
     }
 
     // TODO call more methods to increase code covering
