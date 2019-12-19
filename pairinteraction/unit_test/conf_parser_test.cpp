@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(conf_parser_test) // NOLINT
 
     // Test subscript getter and str() conversion
     BOOST_CHECK_EQUAL(c["first"].str(), "2");
-    BOOST_CHECK_EQUAL(c["second"].str(), "1.2");
+    BOOST_CHECK_EQUAL(c["second"].str(), "1.200000");
     BOOST_CHECK_EQUAL(c["third"].str(), "Hello World!");
     BOOST_CHECK_EQUAL(c["fourth"].str(), "2");
     BOOST_CHECK_EQUAL(c["fifth"].str(), "Hello World!");
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(conf_parser_test) // NOLINT
     // Test const methods
     Configuration const cc(c);
     BOOST_CHECK_EQUAL(cc["first"].str(), "2");
-    BOOST_CHECK_EQUAL(cc["second"].str(), "1.2");
+    BOOST_CHECK_EQUAL(cc["second"].str(), "1.200000");
     BOOST_CHECK_EQUAL(cc["third"].str(), "Hello World!");
     BOOST_CHECK_EQUAL(cc["fourth"].str(), "2");
     BOOST_CHECK_EQUAL(cc["fifth"].str(), "Hello World!");
