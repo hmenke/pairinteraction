@@ -22,9 +22,9 @@
 #include "HamiltonianOne.h"
 #include "HamiltonianTwo.h"
 
-#include <boost/filesystem.hpp>
 #include <fmt/format.h>
 
+#include <experimental/filesystem>
 #include <iostream>
 #include <locale>
 #include <memory>
@@ -43,8 +43,10 @@ int compute(const std::string &config_name, const std::string &output_name) {
 
     Eigen::setNbThreads(1); // TODO set it to setNbThreads(0) when Eigen's multithreading is needed
 
-    boost::filesystem::path path_config = boost::filesystem::absolute(config_name);
-    boost::filesystem::path path_cache = boost::filesystem::absolute(output_name);
+    std::experimental::filesystem::path path_config =
+        std::experimental::filesystem::absolute(config_name);
+    std::experimental::filesystem::path path_cache =
+        std::experimental::filesystem::absolute(output_name);
 
     // === Load configuration ===
     Configuration config;

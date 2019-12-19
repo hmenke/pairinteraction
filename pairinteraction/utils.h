@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <array>
 #include <complex>
+#include <experimental/filesystem>
 #include <functional>
 #include <random>
 #include <type_traits>
@@ -105,6 +106,35 @@ template <typename T>
 inline T randint(T a, T b) {
     static_assert(std::is_integral<T>::value && sizeof(T) > 1, "The type must be an integer!");
     return std::uniform_int_distribution<T>(a, b)(randint_engine());
+}
+
+/// \brief Generate a unique path
+///
+/// Actually this path is not unique, but just a random string of four groups
+/// of hex digits.  This is supposed to mirror Boost.Filesystem, but I'm not
+/// sure whether it does that.  If you don't call this function too often it
+/// should do for most cases.
+///
+/// \param p   path template to be filled with randomness ('%' is the replacement char)
+/// \returns random path based on the template \p p
+inline std::experimental::filesystem::path
+unique_path(std::experimental::filesystem::path const &p = "%%%%-%%%%-%%%%-%%%%") {
+    using path = std::experimental::filesystem::path;
+    path::string_type s(p.native());
+
+    char const hex[] = "0123456789abcdef";
+    auto end = sizeof(hex) - 2;
+    decltype(end) begin = 0;
+    char const percent = '%';
+
+    for (auto &i : s) {
+        if (s[i] == percent) {
+            size_t idx = randint(begin, end);
+            i = hex[idx];
+        }
+    }
+
+    return s;
 }
 
 // https://de.wikipedia.org/wiki/FNV_(Informatik)

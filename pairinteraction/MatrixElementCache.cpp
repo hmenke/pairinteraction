@@ -24,7 +24,9 @@
 #include "version.h"
 
 #include <boost/tokenizer.hpp>
+
 #include <cctype>
+#include <experimental/filesystem>
 #include <iostream>
 #include <limits>
 #include <memory>
@@ -78,7 +80,7 @@ MatrixElementCache::MatrixElementCache()
     : defectdbname(""), dbname(""), pid_which_created_db(utils::get_pid()) {}
 
 MatrixElementCache::MatrixElementCache(std::string const &cachedir)
-    : defectdbname(""), dbname((boost::filesystem::absolute(cachedir) /
+    : defectdbname(""), dbname((std::experimental::filesystem::absolute(cachedir) /
                                 ("cache_elements_" + version::cache() + ".db"))
                                    .string()),
       db(new sqlite::handle(dbname)), stmt(new sqlite::statement(*db)),

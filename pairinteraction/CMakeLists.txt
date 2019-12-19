@@ -105,12 +105,16 @@ find_package(Sqlite3 REQUIRED)
 include_directories(SYSTEM ${SQLITE3_INCLUDE_DIR})
 list(APPEND LIBRARIES ${SQLITE3_LIBRARY})
 
-find_package(Boost COMPONENTS filesystem system program_options serialization REQUIRED)
+find_package(Boost COMPONENTS program_options serialization REQUIRED)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 list(APPEND LIBRARIES ${Boost_LIBRARIES})
 if(MSVC)
   add_definitions(-DBOOST_ALL_NO_LIB)
   add_definitions(-DBOOST_ALL_DYN_LINK)
+endif()
+
+if(NOT MSVC)
+    list(APPEND LIBRARIES stdc++fs)
 endif()
 
 if(WITH_GSL)

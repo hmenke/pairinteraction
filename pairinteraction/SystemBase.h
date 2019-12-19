@@ -27,10 +27,7 @@
 #include "serialization_eigen.h"
 #include "serialization_path.h"
 #include "utils.h"
-#include <unsupported/Eigen/MatrixFunctions>
 
-#include <algorithm>
-#include <boost/filesystem.hpp>
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/member.hpp>
 #include <boost/multi_index/random_access_index.hpp>
@@ -38,6 +35,9 @@
 #include <boost/serialization/complex.hpp>
 #include <boost/serialization/set.hpp>
 #include <boost/serialization/vector.hpp>
+#include <unsupported/Eigen/MatrixFunctions>
+
+#include <algorithm>
 #include <complex>
 #include <functional>
 #include <iterator>

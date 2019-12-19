@@ -18,8 +18,8 @@
  */
 #include "Interface.h"
 
-#include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
+
 #include <iostream>
 #include <memory>
 

@@ -22,14 +22,16 @@
 #include "SystemOne.h"
 #include "SystemTwo.h"
 #include "dtypes.h"
+#include "utils.h"
 
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
 
-#include <algorithm>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
-#include <boost/filesystem.hpp>
+
+#include <algorithm>
+#include <experimental/filesystem>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -38,20 +40,21 @@
 using Catch::Matchers::WithinAbs;
 
 struct F {
-    F() : path_cache(boost::filesystem::temp_directory_path() / boost::filesystem::unique_path()) {
+    F() : path_cache(std::experimental::filesystem::temp_directory_path() / utils::unique_path()) {
         // Create cache directory
-        if (boost::filesystem::create_directory(path_cache)) {
-            std::cout << "Cache directory " << boost::filesystem::absolute(path_cache).string()
-                      << " created." << std::endl;
+        if (std::experimental::filesystem::create_directory(path_cache)) {
+            std::cout << "Cache directory "
+                      << std::experimental::filesystem::absolute(path_cache).string() << " created."
+                      << std::endl;
         } else {
             throw std::runtime_error("Could not create cache directory.");
         }
     }
     ~F() {
         // Delete cache directory
-        boost::filesystem::remove_all(path_cache);
+        std::experimental::filesystem::remove_all(path_cache);
     }
-    boost::filesystem::path path_cache;
+    std::experimental::filesystem::path path_cache;
 };
 
 TEST_CASE_METHOD(F, "integration_test") // NOLINT
