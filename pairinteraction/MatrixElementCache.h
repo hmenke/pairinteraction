@@ -27,8 +27,8 @@
 #include "utils.h"
 
 #include <boost/filesystem.hpp>
-#include <boost/serialization/unordered_map.hpp>
-#include <boost/serialization/unordered_set.hpp>
+#include <cereal/types/unordered_map.hpp>
+#include <cereal/types/unordered_set.hpp>
 #include <wignerSymbols/wignerSymbols-cpp.h>
 
 #include <memory>
@@ -104,7 +104,7 @@ private:
         std::array<float, 2> j;
 
     private:
-        friend class boost::serialization::access;
+        friend class cereal::access;
         template <class Archive>
         void serialize(Archive &ar, const unsigned int /*version*/) {
             ar &method &species &kappa &n &l &j;
@@ -120,7 +120,7 @@ private:
         int sgn;
 
     private:
-        friend class boost::serialization::access;
+        friend class cereal::access;
         template <class Archive>
         void serialize(Archive &ar, const unsigned int /*version*/) {
             ar &kappa &j &m &sgn;
@@ -138,7 +138,7 @@ private:
         int sgn;
 
     private:
-        friend class boost::serialization::access;
+        friend class cereal::access;
         template <class Archive>
         void serialize(Archive &ar, const unsigned int /*version*/) {
             ar &s &kappa &l &j &sgn;
@@ -154,7 +154,7 @@ private:
         int sgn;
 
     private:
-        friend class boost::serialization::access;
+        friend class cereal::access;
         template <class Archive>
         void serialize(Archive &ar, const unsigned int /*version*/) {
             ar &kappa &l &sgn;
@@ -206,7 +206,7 @@ private:
     /// Method for serialization ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    friend class boost::serialization::access;
+    friend class cereal::access;
     template <class Archive>
     void serialize(Archive &ar, const unsigned int /*version*/) {
         ar &method;

@@ -24,14 +24,18 @@
 #include "SystemBase.h"
 #include "utils.h"
 
+#include <cereal/types/array.hpp>
+#include <cereal/types/base_class.hpp>
+#include <cereal/types/polymorphic.hpp>
+#include <cereal/types/unordered_map.hpp>
+
 #include <array>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/unordered_map.hpp>
 #include <cmath>
 #include <set>
 #include <type_traits>
 #include <unordered_map>
 
+class SystemTwo;
 class SystemOne : public SystemBase<StateOne> {
 public:
     SystemOne(std::string species, MatrixElementCache &cache);
@@ -65,7 +69,7 @@ protected:
 private:
     std::array<double, 3> efield, bfield;
     std::unordered_map<int, scalar_t> efield_spherical, bfield_spherical;
-    bool diamagnetism;
+    bool diamagnetism{true};
     std::unordered_map<std::array<int, 2>, scalar_t, utils::hash<std::array<int, 2>>>
         diamagnetism_terms;
     std::string species;
@@ -75,7 +79,7 @@ private:
     std::unordered_map<std::array<int, 2>, eigen_sparse_t, utils::hash<std::array<int, 2>>>
         interaction_diamagnetism;
 
-    parity_t sym_reflection;
+    parity_t sym_reflection{NA};
     std::set<float> sym_rotation;
 
     ////////////////////////////////////////////////////////////////////
@@ -145,16 +149,22 @@ private:
     /// Method for serialization ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    friend class boost::serialization::access;
+    friend class cereal::access;
+    friend class SystemTwo;
+    SystemOne();
 
     template <class Archive>
     void serialize(Archive &ar, const unsigned int /*version*/) {
-        ar &boost::serialization::base_object<SystemBase<StateOne>>(*this);
+        ar &cereal::base_class<SystemBase<StateOne>>(this);
         ar &species;
         ar &efield &bfield &diamagnetism &sym_reflection &sym_rotation;
         ar &efield_spherical &bfield_spherical &diamagnetism_terms;
         ar &interaction_efield &interaction_bfield &interaction_diamagnetism;
     }
 };
+
+#ifndef SWIG
+CEREAL_REGISTER_TYPE(SystemOne) // NOLINT
+#endif
 
 #endif

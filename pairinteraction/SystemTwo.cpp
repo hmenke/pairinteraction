@@ -29,6 +29,13 @@
 #include <unordered_set>
 #include <vector>
 
+SystemTwo::SystemTwo()
+    : minimal_le_roy_radius(std::numeric_limits<double>::max()),
+      distance(std::numeric_limits<double>::max()), distance_x(0), distance_y(0),
+      distance_z(std::numeric_limits<double>::max()), GTbool(false),
+      surface_distance(std::numeric_limits<double>::max()), ordermax(3), sym_permutation(NA),
+      sym_inversion(NA), sym_reflection(NA), sym_rotation({ARB}) {}
+
 SystemTwo::SystemTwo(const SystemOne &b1, const SystemOne &b2, MatrixElementCache &cache)
     : SystemBase(cache), species({{b1.getSpecies(), b2.getSpecies()}}), system1(b1), system2(b2),
       minimal_le_roy_radius(std::numeric_limits<double>::max()),
@@ -222,6 +229,8 @@ void SystemTwo::initializeBasis() {
     ////////////////////////////////////////////////////////////////////
     /// Build two atom states //////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
+
+    auto &cache = *m_cache;
 
     /// Combine one atom states ////////////////////////////////////////
 
@@ -633,6 +642,8 @@ void SystemTwo::initializeInteraction() {
     greentensor_terms_dq.clear();
     greentensor_terms_qd.clear();
     angle_terms.clear();
+
+    auto &cache = *m_cache;
 
     double tolerance = 1e-16;
 
@@ -1471,6 +1482,8 @@ void SystemTwo::onStatesChange() { minimal_le_roy_radius = std::numeric_limits<d
 ////////////////////////////////////////////////////////////////////
 
 void SystemTwo::checkDistance(const double &distance) {
+
+    auto &cache = *m_cache;
 
     // Get the minimal Le Roy radius
     if (minimal_le_roy_radius == std::numeric_limits<double>::max()) {
