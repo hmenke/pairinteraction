@@ -10,3 +10,6 @@
 [submodule "libs/fmt"]
 	path = libs/fmt
 	url = git://github.com/fmtlib/fmt
+[submodule "libs/Catch2"]
+	path = libs/Catch2
+	url = git://github.com/catchorg/Catch2
