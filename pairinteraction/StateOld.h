@@ -28,8 +28,8 @@
 #include <iostream>
 #include <string>
 
-#include <boost/serialization/array.hpp>
-#include <boost/serialization/string.hpp>
+#include <cereal/types/array.hpp>
+#include <cereal/types/string.hpp>
 
 /** \brief %Base class for states
  *
@@ -88,12 +88,10 @@ private:
     /// Method for serialization ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    friend class boost::serialization::access;
+    friend class cereal::access;
 
     template <class Archive>
-    void serialize(Archive &ar, const unsigned int version) {
-        (void)version;
-
+    void serialize(Archive &ar, const unsigned int /* version */) {
         ar &species &element &s &n &l &j &m;
     }
 };
@@ -158,12 +156,10 @@ private:
     /// Method for serialization ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    friend class boost::serialization::access;
+    friend class cereal::access;
 
     template <class Archive>
-    void serialize(Archive &ar, const unsigned int version) {
-        (void)version;
-
+    void serialize(Archive &ar, const unsigned int /* version */) {
         ar &species &element &s &n &l &j &m;
     }
 };

@@ -26,8 +26,12 @@
 
 #include <Eigen/Sparse>
 #include <boost/math/special_functions/binomial.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/unordered_map.hpp>
+#include <cereal/types/array.hpp>
+#include <cereal/types/base_class.hpp>
+#include <cereal/types/polymorphic.hpp>
+#include <cereal/types/string.hpp>
+#include <cereal/types/unordered_map.hpp>
+
 #include <cmath>
 #include <set>
 #include <type_traits>
@@ -78,14 +82,17 @@ private:
     std::unordered_map<int, eigen_sparse_t> interaction_greentensor_qd;
 
     double minimal_le_roy_radius;
-    double distance, distance_x, distance_y, distance_z;
-    bool GTbool;
+    double distance;
+    double distance_x; // NOLINT
+    double distance_y; // NOLINT
+    double distance_z;
+    bool GTbool; // NOLINT
     double surface_distance;
-    unsigned int ordermax;
+    unsigned int ordermax; // NOLINT
 
-    parity_t sym_permutation;
-    parity_t sym_inversion;
-    parity_t sym_reflection;
+    parity_t sym_permutation; // NOLINT
+    parity_t sym_inversion;   // NOLINT
+    parity_t sym_reflection;  // NOLINT
     std::set<int> sym_rotation;
 
     std::unordered_map<int, double> angle_terms;
@@ -167,11 +174,12 @@ private:
     /// Method for serialization ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    friend class boost::serialization::access;
+    friend class cereal::access;
+    SystemTwo();
 
     template <class Archive>
     void serialize(Archive &ar, const unsigned int /*version*/) {
-        ar &boost::serialization::base_object<SystemBase<StateTwo>>(*this);
+        ar &cereal::base_class<SystemBase<StateTwo>>(this);
         ar &species &system1 &system2;
         ar &distance &distance_x &distance_y &distance_z &surface_distance &ordermax;
         ar &sym_permutation &sym_inversion &sym_reflection &sym_rotation;
@@ -180,5 +188,9 @@ private:
             &interaction_greentensor_dq &interaction_greentensor_qd;
     }
 };
+
+#ifndef SWIG
+CEREAL_REGISTER_TYPE(SystemTwo) // NOLINT
+#endif
 
 #endif

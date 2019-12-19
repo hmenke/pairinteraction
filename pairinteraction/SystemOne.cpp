@@ -30,14 +30,16 @@
 #include <utility>
 #include <vector>
 
+SystemOne::SystemOne()
+    : efield({{0, 0, 0}}), bfield({{0, 0, 0}}), sym_rotation({static_cast<float>(ARB)}) {}
+
 SystemOne::SystemOne(std::string species, MatrixElementCache &cache)
-    : SystemBase(cache), efield({{0, 0, 0}}), bfield({{0, 0, 0}}), diamagnetism(true),
-      species(std::move(species)), sym_reflection(NA), sym_rotation({static_cast<float>(ARB)}) {}
+    : SystemBase(cache), efield({{0, 0, 0}}), bfield({{0, 0, 0}}), species(std::move(species)),
+      sym_rotation({static_cast<float>(ARB)}) {}
 
 SystemOne::SystemOne(std::string species, MatrixElementCache &cache, bool memory_saving)
     : SystemBase(cache, memory_saving), efield({{0, 0, 0}}), bfield({{0, 0, 0}}),
-      diamagnetism(true), species(std::move(species)), sym_reflection(NA),
-      sym_rotation({static_cast<float>(ARB)}) {}
+      species(std::move(species)), sym_rotation({static_cast<float>(ARB)}) {}
 
 const std::string &SystemOne::getSpecies() const { return species; }
 
@@ -127,6 +129,8 @@ void SystemOne::initializeBasis() {
         throw std::runtime_error(
             "The number of basis elements is infinite. The basis has to be restricted.");
     }
+
+    auto &cache = *m_cache;
 
     ////////////////////////////////////////////////////////////////////
     /// Build one atom states //////////////////////////////////////////
@@ -295,6 +299,8 @@ void SystemOne::initializeInteraction() {
     ////////////////////////////////////////////////////////////////////
     /// Prepare the calculation of the interaction /////////////////////
     ////////////////////////////////////////////////////////////////////
+
+    auto &cache = *m_cache;
 
     // Check if something to do
     double tolerance = 1e-24;

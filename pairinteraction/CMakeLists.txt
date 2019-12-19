@@ -103,11 +103,13 @@ include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/libs/eigen)
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/libs/fmt/include)
 add_definitions(-DFMT_HEADER_ONLY)
 
+include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/libs/cereal/include)
+
 find_package(Sqlite3 REQUIRED)
 include_directories(SYSTEM ${SQLITE3_INCLUDE_DIR})
 list(APPEND LIBRARIES ${SQLITE3_LIBRARY})
 
-find_package(Boost COMPONENTS filesystem system serialization REQUIRED)
+find_package(Boost COMPONENTS filesystem system REQUIRED)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 list(APPEND LIBRARIES ${Boost_LIBRARIES})
 if(MSVC)

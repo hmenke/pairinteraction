@@ -27,17 +27,18 @@
 #include "serialization_eigen.h"
 #include "serialization_path.h"
 #include "utils.h"
-#include <unsupported/Eigen/MatrixFunctions>
 
-#include <algorithm>
 #include <boost/filesystem.hpp>
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/member.hpp>
 #include <boost/multi_index/random_access_index.hpp>
 #include <boost/multi_index_container.hpp>
-#include <boost/serialization/complex.hpp>
-#include <boost/serialization/set.hpp>
-#include <boost/serialization/vector.hpp>
+#include <cereal/types/complex.hpp>
+#include <cereal/types/set.hpp>
+#include <cereal/types/vector.hpp>
+#include <unsupported/Eigen/MatrixFunctions>
+
+#include <algorithm>
 #include <complex>
 #include <functional>
 #include <iterator>
@@ -74,12 +75,10 @@ private:
     /// Method for serialization ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    friend class boost::serialization::access;
+    friend class cereal::access;
 
     template <class Archive>
-    void serialize(Archive &ar, const unsigned int version) {
-        (void)version;
-
+    void serialize(Archive &ar, const unsigned int /* version */) {
         ar &idx &state;
     }
 };
@@ -106,6 +105,33 @@ struct states_set {
                 std::hash<T>>>>
         type;
 };
+
+namespace cereal {
+
+template <class Archive, typename Value, typename IndexSpecifierList, typename Allocator>
+void save(
+    Archive &ar,
+    boost::multi_index::multi_index_container<Value, IndexSpecifierList, Allocator> const &vector) {
+    ar(make_size_tag(static_cast<size_type>(vector.size())));
+    for (auto &&v : vector) {
+        ar(v);
+    }
+}
+
+template <class Archive, typename Value, typename IndexSpecifierList, typename Allocator>
+void load(Archive &ar,
+          boost::multi_index::multi_index_container<Value, IndexSpecifierList, Allocator> &vector) {
+    size_type size;
+    ar(make_size_tag(size));
+    vector.reserve(static_cast<size_type>(size));
+    for (size_type i = 0; i < size; ++i) {
+        Value v;
+        ar(v);
+        vector.push_back(v);
+    }
+}
+
+} // namespace cereal
 
 template <class T>
 class SystemBase {
@@ -1203,17 +1229,17 @@ public:
     }
 
 protected:
+    SystemBase()
+        : energy_min(std::numeric_limits<double>::lowest()),
+          energy_max(std::numeric_limits<double>::max()) {}
+
     SystemBase(MatrixElementCache &cache)
-        : cache(cache), threshold_for_sqnorm(0.05),
-          energy_min(std::numeric_limits<double>::lowest()),
-          energy_max(std::numeric_limits<double>::max()), memory_saving(false),
-          is_interaction_already_contained(false), is_new_hamiltonian_required(false) {}
+        : m_cache(std::addressof(cache)), energy_min(std::numeric_limits<double>::lowest()),
+          energy_max(std::numeric_limits<double>::max()) {}
 
     SystemBase(MatrixElementCache &cache, bool memory_saving)
-        : cache(cache), threshold_for_sqnorm(0.05),
-          energy_min(std::numeric_limits<double>::lowest()),
-          energy_max(std::numeric_limits<double>::max()), memory_saving(memory_saving),
-          is_interaction_already_contained(false), is_new_hamiltonian_required(false) {}
+        : m_cache(std::addressof(cache)), energy_min(std::numeric_limits<double>::lowest()),
+          energy_max(std::numeric_limits<double>::max()), memory_saving(memory_saving) {}
 
     virtual void initializeBasis() = 0;
     virtual void initializeInteraction() = 0;
@@ -1229,18 +1255,18 @@ protected:
 
     virtual void onStatesChange(){};
 
-    MatrixElementCache &cache;
+    MatrixElementCache *m_cache{nullptr};
 
-    double threshold_for_sqnorm;
+    double threshold_for_sqnorm{0.05};
 
     double energy_min, energy_max;
     std::set<int> range_n, range_l;
     std::set<float> range_j, range_m;
     std::set<T> states_to_add;
 
-    bool memory_saving;
-    bool is_interaction_already_contained;
-    bool is_new_hamiltonian_required;
+    bool memory_saving{false};
+    bool is_interaction_already_contained{false};
+    bool is_new_hamiltonian_required{false};
 
     typename states_set<T>::type states;
     eigen_sparse_t basisvectors;
@@ -1597,11 +1623,11 @@ private:
     /// Method for serialization ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    friend class boost::serialization::access;
+    friend class cereal::access;
 
     template <class Archive>
     void serialize(Archive &ar, const unsigned int /*version*/) {
-        ar &cache &threshold_for_sqnorm;
+        ar &(*m_cache) & threshold_for_sqnorm;
         ar &energy_min &energy_max &range_n &range_l &range_j &range_m &states_to_add;
         ar &memory_saving &is_interaction_already_contained &is_new_hamiltonian_required;
         ar &states &basisvectors &hamiltonian;
