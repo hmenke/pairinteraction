@@ -60,7 +60,7 @@ SectionGroup /e "Dependencies"
     Goto next
 
     update:
-      File "vcredist_x64.exe"
+      File "${BUILD_DIR}\vcredist_x64.exe"
       ExecWait "$INSTDIR\vcredist_x64.exe"
       Delete "$INSTDIR\vcredist_x64.exe"
 
