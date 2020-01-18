@@ -11,14 +11,13 @@ environment:
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_66_0\lib64-msvc-14.1
     PATH: "%BOOST_LIBRARYDIR%;%MINICONDA_ROOT%;%MINICONDA_ROOT%\\Scripts;%MINICONDA_ROOT%\\Library\\bin;%PATH%"
     APPVEYOR_SAVE_CACHE_ON_ERROR: true
- 
+
+init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 install:
   - git submodule update --init --recursive
 
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-  - set /p RedistVersion=<"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Microsoft.VCRedistVersion.default.txt"
-  - dir "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Redist\MSVC\%RedistVersion%\x64"
-  - tree "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Redist\MSVC\%RedistVersion%\x64"
 
   - ps: choco install -y --no-progress --allow-empty-checksums -r swig --version 4.0.1
   - ps: choco install -y --no-progress --allow-empty-checksums -r sqlite --version 3.19.2
