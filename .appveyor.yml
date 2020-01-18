@@ -49,6 +49,8 @@ after_build:
   - cmd: copy %BOOST_LIBRARYDIR%\boost_program_options-vc141-mt-x64-*.dll pairinteraction\Release
   - cmd: copy %BOOST_LIBRARYDIR%\boost_serialization-vc141-mt-x64-*.dll pairinteraction\Release
   - cmd: copy %BOOST_LIBRARYDIR%\boost_system-vc141-mt-x64-*.dll pairinteraction\Release
+  - cmd: set /p RedistVersion=<"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\Microsoft.VCRedistVersion.default.txt"
+  - cmd: copy "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Redist\MSVC\%RedistVersion%\vcredist_x64.exe" vcredist_x64.exe
   - cmd: cmake --build . --target win32 --config "%CONFIGURATION%"
   - cmd: python setup.py bdist_wheel --python-tag py3 --plat-name win_amd64
   - ps: $env:PATH_WHEEL_UNMODIFIED=$(ls dist\*.whl | foreach { $_.FullName })
