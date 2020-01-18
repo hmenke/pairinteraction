@@ -16,6 +16,9 @@ install:
   - git submodule update --init --recursive
 
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+  - set /p RedistVersion=<"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Microsoft.VCRedistVersion.default.txt"
+  - dir "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Redist\MSVC\%RedistVersion%\x64"
+  - tree "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Redist\MSVC\%RedistVersion%\x64"
 
   - ps: choco install -y --no-progress --allow-empty-checksums -r swig --version 4.0.1
   - ps: choco install -y --no-progress --allow-empty-checksums -r sqlite --version 3.19.2
