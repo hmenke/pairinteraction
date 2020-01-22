@@ -26,7 +26,6 @@
 #include "dtypes.h"
 #include "utils.h"
 
-#include <boost/filesystem.hpp>
 #include <cereal/types/unordered_map.hpp>
 #include <cereal/types/unordered_set.hpp>
 #include <wignerSymbols/wignerSymbols-cpp.h>

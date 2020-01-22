@@ -20,13 +20,12 @@
 #ifndef SERIALIZATION_PATH_H
 #define SERIALIZATION_PATH_H
 
-#include <boost/filesystem.hpp>
-#include <cereal/types/string.hpp>
+#include "filesystem.h"
 
 namespace cereal {
 
 template <class Archive>
-void serialize(Archive &ar, boost::filesystem::path &p, const unsigned int /* version */) {
+void serialize(Archive &ar, fs::path &p, const unsigned int /* version */) {
     std::string s;
 
     if (Archive::is_saving::value) {
@@ -36,7 +35,7 @@ void serialize(Archive &ar, boost::filesystem::path &p, const unsigned int /* ve
     ar &s;
 
     if (Archive::is_loading::value) {
-        p = boost::filesystem::path(s);
+        p = fs::path(s);
     }
 }
 
