@@ -43,7 +43,7 @@ if(SPHINX_FOUND)
       ${CMAKE_COMMAND} -E env SPHINX_APIDOC_OPTIONS=members,inherited-members,show-inheritance
       # sphinx-apidoc
       ${PYTHON_EXECUTABLE} -c
-      "import sys; from sphinx.apidoc import main; sys.exit(main(sys.argv))"
+      "import sys; from ${SPHINX_APIDOC_LIBRARY} import main; sys.exit(main(sys.argv[1:]))"
         -f
         -P
         -o ${SPHINX_BASE}
@@ -55,7 +55,7 @@ if(SPHINX_FOUND)
     COMMAND
       # sphinx-build
       ${PYTHON_EXECUTABLE} -c
-      "import sys; from sphinx import main; sys.exit(main(sys.argv))"
+      "import sys; from ${SPHINX_BUILD_LIBRARY} import main; sys.exit(main(sys.argv[1:]))"
         -q
         -b html
         -c "${SPHINX_BASE}"
