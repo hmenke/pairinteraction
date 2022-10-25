@@ -1,5 +1,5 @@
-pairinteraction package
-=======================
+pairinteraction Python interface
+================================
 
 Submodules
 ----------

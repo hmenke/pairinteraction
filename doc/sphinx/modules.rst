@@ -11,3 +11,4 @@ Note that this part of the documentation is under construction, the `tutorials`_
    :maxdepth: 4
 
    pairinteraction
+   doxygen

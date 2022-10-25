@@ -93,6 +93,7 @@ set(FILE_LIST
   "images/license-badge.svg"
   "images/arXiv-badge.svg"
   "index.rst"
+  "doxygen.rst"
   "installation.rst"
   "genindex.rst"
   "tutorials.rst")
