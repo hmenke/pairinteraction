@@ -21,11 +21,11 @@ jobs:
     container:
       image: ghcr.io/pairinteraction/pairinteraction-debian:docker
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
         submodules: true
-    - name: Fixup Run actions/checkout@v1
+    - name: Fixup Run actions/checkout
       run: git config --global --add safe.directory '*'
     - name: Configure
       run: cmake -S . -B build/ -DBUILD_TESTING=On -DWITH_COVERAGE=On -DWITH_JULIA=On -DWITH_DOCS=On
@@ -48,7 +48,7 @@ jobs:
         cp -r build/doc/coverage/html public/coverage/
     - name: Deploy pages
       if: github.ref == 'refs/heads/master'
-      uses: JamesIves/github-pages-deploy-action@v4.3.3
+      uses: JamesIves/github-pages-deploy-action@v4.4.1
       with:
         branch: gh-pages
         folder: public
@@ -59,11 +59,11 @@ jobs:
     container:
       image: ghcr.io/pairinteraction/pairinteraction-manylinux:docker
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
         submodules: true
-    - name: Fixup Run actions/checkout@v1
+    - name: Fixup Run actions/checkout
       run: git config --global --add safe.directory '*'
     - name: Setup Python
       run: |
@@ -101,11 +101,11 @@ jobs:
     env:
       package: pairinteraction-install-opensuse.rpm
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
         submodules: true
-    - name: Fixup Run actions/checkout@v1
+    - name: Fixup Run actions/checkout
       run: git config --global --add safe.directory '*'
     - name: Configure
       run: cmake -S . -B build/ -DBUILD_TESTING=On -DWITH_JULIA=On -DWITH_DOCS=On -DCPACK_PACKAGE_FILE_NAME="${package}"
@@ -127,11 +127,11 @@ jobs:
     container:
       image: ghcr.io/pairinteraction/pairinteraction-static-analysis:docker
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
         submodules: true
-    - name: Fixup Run actions/checkout@v1
+    - name: Fixup Run actions/checkout
       run: git config --global --add safe.directory '*'
     - name: Fix style
       run: |
@@ -154,11 +154,11 @@ jobs:
     container:
       image: ghcr.io/pairinteraction/pairinteraction-static-analysis:docker
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
         submodules: true
-    - name: Fixup Run actions/checkout@v1
+    - name: Fixup Run actions/checkout
       run: git config --global --add safe.directory '*'
     - name: Configure
       run: cmake -S . -B build/ -DBUILD_TESTING=On -DWITH_CLANG_TIDY=On -DWITH_JULIA=On -DWITH_DOCS=On -DWITH_GUI=Off
@@ -176,11 +176,11 @@ jobs:
     env:
       package: pairinteraction-install-ubuntu.deb
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
         submodules: true
-    - name: Fixup Run actions/checkout@v1
+    - name: Fixup Run actions/checkout
       run: git config --global --add safe.directory '*'
     - name: Configure
       run: cmake -S . -B build/ -DBUILD_TESTING=On -DWITH_JULIA=On -DWITH_DOCS=On -DCPACK_PACKAGE_FILE_NAME="${package}"
