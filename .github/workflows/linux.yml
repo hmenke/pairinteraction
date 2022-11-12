@@ -68,7 +68,7 @@ jobs:
     - name: Setup Python
       run: |
         echo "/opt/python/cp38-cp38/bin" >> $GITHUB_PATH
-    - uses: actions/cache@v1
+    - uses: actions/cache@v3
       with:
         path: ${{ runner.temp }}/cache-pip
         key: ${{ runner.os }}-cache-pip-${{ hashFiles('requirements.txt') }}
