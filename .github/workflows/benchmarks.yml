@@ -59,7 +59,7 @@ jobs:
         fi
     - name: Store benchmark result
       if: ${{ steps.check-remote-branch.outputs.exists == 'true' }}
-      uses: benchmark-action/github-action-benchmark@v1.16.1
+      uses: benchmark-action/github-action-benchmark@v1.16.2
       with:
         name: C++ Benchmark
         tool: 'googlecpp'
