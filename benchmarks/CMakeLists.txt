@@ -43,3 +43,8 @@ function(benchmark)
 endfunction()
 
 benchmark(TARGET integration_bench SOURCE integration_bench.cpp)
+benchmark(TARGET diagonalization_bench SOURCE diagonalization_bench.cpp)
+
+find_package(BLAS REQUIRED)
+find_package(LAPACK REQUIRED)
+target_link_libraries(diagonalization_bench PRIVATE ${LAPACK_LIBRARIES})
