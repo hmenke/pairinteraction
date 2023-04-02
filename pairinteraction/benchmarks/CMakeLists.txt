@@ -34,7 +34,7 @@ function(benchmark)
   add_executable(${BENCH_TARGET} ${BENCH_SOURCE})
   target_compile_features(${BENCH_TARGET} PRIVATE cxx_std_17)
   set_target_properties(${BENCH_TARGET} PROPERTIES CXX_EXTENSIONS OFF)
-  target_link_libraries(${BENCH_TARGET} PRIVATE pireal benchmark::benchmark)
+  target_link_libraries(${BENCH_TARGET} PRIVATE pairinteraction benchmark::benchmark)
   add_custom_target(run-${BENCH_TARGET}
     ${BENCH_TARGET} --benchmark_format=json --benchmark_out=${BENCH_TARGET}.json
     DEPENDS ${BENCH_TARGET}
@@ -43,3 +43,12 @@ function(benchmark)
 endfunction()
 
 benchmark(TARGET integration_bench SOURCE integration_bench.cpp)
+
+if(WITH_LAPACK)
+  benchmark(TARGET diagonalization_bench SOURCE diagonalization_bench.cpp)
+  if(MKL_FOUND)
+    target_link_libraries(diagonalization_bench PRIVATE MKL::MKL)
+  elseif(LAPACK_FOUND)
+    target_link_libraries(diagonalization_bench PRIVATE LAPACK::LAPACK LAPACKE::LAPACKE)
+  endif()
+endif()

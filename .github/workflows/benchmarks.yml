@@ -30,7 +30,9 @@ jobs:
     - name: Fixup Run actions/checkout
       run: git config --global --add safe.directory '*'
     - name: Configure
-      run: cmake -S . -B build/ -DBUILD_TESTING=Off -DWITH_BENCHS=On
+      run: |
+        . /opt/intel/oneapi/setvars.sh
+        cmake -S . -B build/ -DMKL_THREADING=gnu_thread -DBUILD_TESTING=Off -DWITH_BENCHS=On
     - name: Build
       run: cmake --build build/ -- --keep-going
     - name: Benchmark
