@@ -43,3 +43,9 @@ function(benchmark)
 endfunction()
 
 benchmark(TARGET integration_bench SOURCE integration_bench.cpp)
+
+if(WITH_LAPACK AND LAPACK_FOUND)
+  benchmark(TARGET diagonalization_bench SOURCE diagonalization_bench.cpp)
+  target_link_options(diagonalization_bench PRIVATE ${LAPACK_LINKER_FLAGS})
+  target_link_libraries(diagonalization_bench PRIVATE ${LAPACK_LIBRARIES})
+endif()

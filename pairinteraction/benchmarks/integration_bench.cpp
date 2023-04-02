@@ -1,9 +1,9 @@
-#include "MatrixElementCache.h"
-#include "State.h"
-#include "SystemOne.h"
-#include "SystemTwo.h"
-#include "dtypes.h"
-#include "filesystem.h"
+#include "MatrixElementCache.hpp"
+#include "State.hpp"
+#include "SystemOne.hpp"
+#include "SystemTwo.hpp"
+#include "dtypes.hpp"
+#include "filesystem.hpp"
 
 #include <benchmark/benchmark.h>
 
