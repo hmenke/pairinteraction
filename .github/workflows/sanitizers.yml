@@ -48,7 +48,9 @@ jobs:
     - name: Fixup Run actions/checkout
       run: git config --global --add safe.directory '*'
     - name: Configure
-      run: cmake -S . -B build/ -DBUILD_TESTING=On -DCMAKE_BUILD_TYPE=Debug -DWITH_JULIA=On -DWITH_DOCS=On
+      run: |
+        unset MKLROOT
+        cmake -S . -B build/ -DBUILD_TESTING=On -DCMAKE_BUILD_TYPE=Debug -DWITH_JULIA=On -DWITH_DOCS=On
       env:
         CXXFLAGS: "-Wall -Wextra -Wpedantic -fno-omit-frame-pointer -fsanitize=address"
         LDFLAGS: "-fsanitize=address"
@@ -73,7 +75,9 @@ jobs:
     - name: Fixup Run actions/checkout
       run: git config --global --add safe.directory '*'
     - name: Configure
-      run: cmake -S . -B build/ -DBUILD_TESTING=On -DCMAKE_BUILD_TYPE=Debug -DWITH_JULIA=On -DWITH_DOCS=On
+      run: |
+        unset MKLROOT
+        cmake -S . -B build/ -DBUILD_TESTING=On -DCMAKE_BUILD_TYPE=Debug -DWITH_JULIA=On -DWITH_DOCS=On
       env:
         CXXFLAGS: "-Wall -Wextra -Wpedantic -fsanitize=undefined"
         LDFLAGS: "-fsanitize=undefined"
@@ -110,7 +114,9 @@ jobs:
     - name: Fixup Run actions/checkout
       run: git config --global --add safe.directory '*'
     - name: Configure
-      run: cmake -S . -B build/ -DBUILD_TESTING=On -DCMAKE_BUILD_TYPE=Debug -DWITH_JULIA=On -DWITH_DOCS=On
+      run: |
+        unset MKLROOT
+        cmake -S . -B build/ -DBUILD_TESTING=On -DCMAKE_BUILD_TYPE=Debug -DWITH_JULIA=On -DWITH_DOCS=On
       env:
         CXXFLAGS: "-Wall -Wextra -Wpedantic -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
     - name: Build
