@@ -148,37 +148,37 @@ void SystemBase<Scalar, State>::addStates(const std::set<State> &s) {
 ////////////////////////////////////////////////////////////////////
 
 template <class Scalar, class State>
-eigen_vector_double_t SystemBase<Scalar, State>::getOverlap(const State &generalizedstate) {
+Eigen::VectorX<double> SystemBase<Scalar, State>::getOverlap(const State &generalizedstate) {
     return this->getOverlap(generalizedstate, 0, 0, 0);
 }
 
 template <class Scalar, class State>
-eigen_vector_double_t
+Eigen::VectorX<double>
 SystemBase<Scalar, State>::getOverlap(const std::vector<State> &generalizedstates) {
     return this->getOverlap(generalizedstates, 0, 0, 0);
 }
 
 template <class Scalar, class State>
-eigen_vector_double_t SystemBase<Scalar, State>::getOverlap(const size_t &state_index) {
+Eigen::VectorX<double> SystemBase<Scalar, State>::getOverlap(const size_t &state_index) {
     return this->getOverlap(state_index, 0, 0, 0);
 }
 
 template <class Scalar, class State>
-eigen_vector_double_t
+Eigen::VectorX<double>
 SystemBase<Scalar, State>::getOverlap(const std::vector<size_t> &states_indices) {
     return this->getOverlap(states_indices, 0, 0, 0);
 }
 
 template <class Scalar, class State>
-eigen_vector_double_t SystemBase<Scalar, State>::getOverlap(const State &generalizedstate,
-                                                            std::array<double, 3> to_z_axis,
-                                                            std::array<double, 3> to_y_axis) {
+Eigen::VectorX<double> SystemBase<Scalar, State>::getOverlap(const State &generalizedstate,
+                                                             std::array<double, 3> to_z_axis,
+                                                             std::array<double, 3> to_y_axis) {
     auto euler_zyz = this->getEulerAngles(to_z_axis, to_y_axis);
     return this->getOverlap(generalizedstate, euler_zyz[0], euler_zyz[1], euler_zyz[2]);
 }
 
 template <class Scalar, class State>
-eigen_vector_double_t
+Eigen::VectorX<double>
 SystemBase<Scalar, State>::getOverlap(const std::vector<State> &generalizedstates,
                                       std::array<double, 3> to_z_axis,
                                       std::array<double, 3> to_y_axis) {
@@ -187,15 +187,15 @@ SystemBase<Scalar, State>::getOverlap(const std::vector<State> &generalizedstate
 }
 
 template <class Scalar, class State>
-eigen_vector_double_t SystemBase<Scalar, State>::getOverlap(const size_t &state_index,
-                                                            std::array<double, 3> to_z_axis,
-                                                            std::array<double, 3> to_y_axis) {
+Eigen::VectorX<double> SystemBase<Scalar, State>::getOverlap(const size_t &state_index,
+                                                             std::array<double, 3> to_z_axis,
+                                                             std::array<double, 3> to_y_axis) {
     auto euler_zyz = this->getEulerAngles(to_z_axis, to_y_axis);
     return this->getOverlap(state_index, euler_zyz[0], euler_zyz[1], euler_zyz[2]);
 }
 
 template <class Scalar, class State>
-eigen_vector_double_t
+Eigen::VectorX<double>
 SystemBase<Scalar, State>::getOverlap(const std::vector<size_t> &states_indices,
                                       std::array<double, 3> to_z_axis,
                                       std::array<double, 3> to_y_axis) {
@@ -204,22 +204,23 @@ SystemBase<Scalar, State>::getOverlap(const std::vector<size_t> &states_indices,
 }
 
 template <class Scalar, class State>
-eigen_vector_double_t SystemBase<Scalar, State>::getOverlap(const State &generalizedstate,
-                                                            double alpha, double beta,
-                                                            double gamma) {
+Eigen::VectorX<double> SystemBase<Scalar, State>::getOverlap(const State &generalizedstate,
+                                                             double alpha, double beta,
+                                                             double gamma) {
     std::vector<State> generalizedstates({generalizedstate});
     return this->getOverlap(generalizedstates, alpha, beta, gamma);
 }
 
 template <class Scalar, class State>
-eigen_vector_double_t SystemBase<Scalar, State>::getOverlap(const size_t &state_index, double alpha,
-                                                            double beta, double gamma) {
+Eigen::VectorX<double> SystemBase<Scalar, State>::getOverlap(const size_t &state_index,
+                                                             double alpha, double beta,
+                                                             double gamma) {
     std::vector<size_t> states_indices({state_index});
     return this->getOverlap(states_indices, alpha, beta, gamma);
 }
 
 template <class Scalar, class State>
-eigen_vector_double_t
+Eigen::VectorX<double>
 SystemBase<Scalar, State>::getOverlap(const std::vector<State> &generalizedstates, double alpha,
                                       double beta, double gamma) {
     // Build basis
@@ -250,7 +251,7 @@ SystemBase<Scalar, State>::getOverlap(const std::vector<State> &generalizedstate
 }
 
 template <class Scalar, class State>
-eigen_vector_double_t
+Eigen::VectorX<double>
 SystemBase<Scalar, State>::getOverlap(const std::vector<size_t> &states_indices, double alpha,
                                       double beta, double gamma) {
     // Build basis
@@ -276,7 +277,7 @@ SystemBase<Scalar, State>::getOverlap(const std::vector<size_t> &states_indices,
 
     // Calculate overlap
     Eigen::SparseMatrix<Scalar> product = basisvectors.adjoint() * overlap_states;
-    eigen_vector_double_t overlap = eigen_vector_double_t::Zero(product.rows());
+    Eigen::VectorX<double> overlap = Eigen::VectorX<double>::Zero(product.rows());
     for (int k = 0; k < product.outerSize(); ++k) {
         for (typename Eigen::SparseMatrix<Scalar>::InnerIterator triple(product, k); triple;
              ++triple) {
@@ -404,7 +405,7 @@ SystemBase<Scalar, State>::getConnections(SystemBase<Scalar, State> &system_to, 
     transformator.setFromTriplets(triplets_transformator.begin(), triplets_transformator.end());
 
     // Calculate overlap
-    eigen_sparse_double_t overlap_sqrt =
+    Eigen::SparseMatrix<double> overlap_sqrt =
         (basisvectors.adjoint() * transformator * system_to.basisvectors).cwiseAbs();
 
     // Determine the indices of the maximal values within the rows
@@ -415,7 +416,8 @@ SystemBase<Scalar, State>::getConnections(SystemBase<Scalar, State> &system_to, 
         double maxval = -1;
         size_t row_with_maxval;
 
-        for (eigen_iterator_double_t triple(overlap_sqrt, k); triple; ++triple) {
+        for (typename Eigen::SparseMatrix<double>::InnerIterator triple(overlap_sqrt, k); triple;
+             ++triple) {
             if (triple.value() > maxval) {
                 row_with_maxval = triple.row();
                 maxval = triple.value();
@@ -426,7 +428,7 @@ SystemBase<Scalar, State>::getConnections(SystemBase<Scalar, State> &system_to, 
     }
 
     // Determine the maximal values within the columns and construct connections
-    eigen_sparse_double_t overlap_sqrt_transposed = overlap_sqrt.transpose();
+    Eigen::SparseMatrix<double> overlap_sqrt_transposed = overlap_sqrt.transpose();
     std::array<std::vector<size_t>, 2> connections;
     connections[0].reserve(std::max(overlap_sqrt.rows(), overlap_sqrt.cols()));
     connections[1].reserve(std::max(overlap_sqrt.rows(), overlap_sqrt.cols()));
@@ -436,7 +438,8 @@ SystemBase<Scalar, State>::getConnections(SystemBase<Scalar, State> &system_to, 
         size_t idx_from;
         size_t idx_to;
 
-        for (eigen_iterator_double_t triple(overlap_sqrt_transposed, k); triple; ++triple) {
+        for (typename Eigen::SparseMatrix<double>::InnerIterator triple(overlap_sqrt_transposed, k);
+             triple; ++triple) {
             if (triple.value() > maxval) {
                 idx_from = triple.col();
                 idx_to = triple.row();
@@ -697,7 +700,7 @@ void SystemBase<Scalar, State>::diagonalize(double threshold) {
     int n = hamiltonian.cols();               // size of the matrix
     Eigen::MatrixX<Scalar> mat = hamiltonian; // matrix
     int lda = mat.outerStride();              // leading dimension
-    eigen_vector_double_t evals(n);           // eigenvalues
+    Eigen::VectorX<double> evals(n);          // eigenvalues
     int info = LAPACKE_evd(LAPACK_COL_MAJOR, jobz, uplo, n, mat.data(), lda, evals.data());
     if (info != 0) {
         throw std::runtime_error("Diagonalization with LAPACKE failed.");
@@ -712,7 +715,7 @@ void SystemBase<Scalar, State>::diagonalize(double threshold) {
     Eigen::SelfAdjointEigenSolver<Eigen::MatrixX<Scalar>> eigensolver(hamiltonian);
 
     // Get eigenvalues and eigenvectors
-    eigen_vector_double_t evals = eigensolver.eigenvalues();
+    Eigen::VectorX<double> evals = eigensolver.eigenvalues();
     Eigen::SparseMatrix<Scalar> evecs = eigensolver.eigenvectors().sparseView();
 
 #endif // EIGEN_USE_LAPACKE || WITH_INTEL_MKL
@@ -1018,8 +1021,8 @@ void SystemBase<Scalar, State>::applySchriefferWolffTransformation(
     // --- Find basisvectors which corresponds to the basis vectors of system0 ---
 
     // Get overlaps between basis vectors
-    eigen_vector_double_t overlap = (basisvectors.adjoint() * low_energy_basis0).cwiseAbs2() *
-        eigen_vector_double_t::Ones(low_energy_basis0.cols());
+    Eigen::VectorX<double> overlap = (basisvectors.adjoint() * low_energy_basis0).cwiseAbs2() *
+        Eigen::VectorX<double>::Ones(low_energy_basis0.cols());
 
     // Get indices of the low_energy_basis0.cols() largest entries and build transformator
     {
@@ -1165,9 +1168,9 @@ SystemBase<Scalar, State>::getBasisvectorIndex(const std::vector<State> &searche
     }
 
     // Get overlaps between basis vectors
-    eigen_sparse_double_t overlap = (canonicalbasis.adjoint() * basisvectors).cwiseAbs2();
-    eigen_vector_double_t overlap_total =
-        eigen_vector_double_t::Ones(canonicalbasis.cols()).transpose() * overlap;
+    Eigen::SparseMatrix<double> overlap = (canonicalbasis.adjoint() * basisvectors).cwiseAbs2();
+    Eigen::VectorX<double> overlap_total =
+        Eigen::VectorX<double>::Ones(canonicalbasis.cols()).transpose() * overlap;
 
     // Get indices of the canonicalbasis.cols() largest entries
     std::vector<size_t> indices_available(basisvectors.cols());
@@ -1183,7 +1186,8 @@ SystemBase<Scalar, State>::getBasisvectorIndex(const std::vector<State> &searche
     for (const auto &k : indices_available) {
         size_t row_with_maxval;
         double maxval = -1;
-        for (eigen_iterator_double_t triple(overlap, k); triple; ++triple) {
+        for (typename Eigen::SparseMatrix<double>::InnerIterator triple(overlap, k); triple;
+             ++triple) {
             if (indices[triple.row()] == std::numeric_limits<size_t>::max() &&
                 triple.value() > maxval) {
                 row_with_maxval = triple.row();
