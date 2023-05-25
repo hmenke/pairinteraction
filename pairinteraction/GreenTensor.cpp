@@ -18,6 +18,10 @@
  */
 
 #include "GreenTensor.hpp"
+
+#include <Eigen/Dense>
+#include <unsupported/Eigen/CXX11/Tensor>
+
 #include <limits>
 
 using TensorType = GreenTensor::TensorType;

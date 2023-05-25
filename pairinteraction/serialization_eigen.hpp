@@ -20,7 +20,8 @@
 #ifndef SERIALIZATION_EIGEN_H
 #define SERIALIZATION_EIGEN_H
 
-#include <Eigen/Sparse>
+#include <Eigen/Core>
+#include <Eigen/SparseCore>
 
 namespace boost {
 namespace serialization {

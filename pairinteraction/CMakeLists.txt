@@ -97,6 +97,9 @@ target_link_libraries(pairinteraction PRIVATE wignerSymbols)
 
 # Eigen
 find_package(Eigen3 REQUIRED NO_MODULE)
+if(${Eigen3_VERSION} VERSION_LESS "3.4.0")
+  target_precompile_headers(pairinteraction PUBLIC EigenCompat.hpp)
+endif()
 target_link_libraries(pairinteraction PUBLIC Eigen3::Eigen)
 
 # Find MKL
