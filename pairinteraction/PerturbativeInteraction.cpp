@@ -18,8 +18,11 @@
  */
 
 #include "PerturbativeInteraction.hpp"
+#include "Constants.hpp"
 
 #include <Eigen/Dense>
+
+#include "Constants.hpp"
 
 #include <unordered_set>
 

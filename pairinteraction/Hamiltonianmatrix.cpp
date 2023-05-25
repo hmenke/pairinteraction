@@ -18,9 +18,11 @@
  */
 
 #include "Hamiltonianmatrix.hpp"
-#include <stdexcept>
 
+#include <Eigen/Dense>
 #include <fmt/format.h>
+
+#include <stdexcept>
 
 template <typename Scalar>
 Hamiltonianmatrix<Scalar>::Hamiltonianmatrix() = default;

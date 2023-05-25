@@ -18,6 +18,10 @@
  */
 
 #include "SystemBase.hpp"
+#include "Symmetry.hpp"
+
+#include <Eigen/Geometry>
+#include <unsupported/Eigen/MatrixFunctions>
 
 #ifdef WITH_INTEL_MKL
 #define MKL_Complex8 std::complex<float>
