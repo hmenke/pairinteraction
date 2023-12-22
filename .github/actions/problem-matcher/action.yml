@@ -1,0 +1,14 @@
+# https://github.com/actions/toolkit/blob/master/docs/problem-matchers.md
+name: Problem Matcher
+branding:
+  icon: check-square
+  color: yellow
+
+runs:
+  using: "composite"
+  steps:
+    # https://github.com/actions/toolkit/blob/master/docs/commands.md#problem-matchers
+    # https://github.com/microsoft/vscode-cpptools/blob/main/Extension/package.json
+    - name: Set up problem matcher
+      shell: bash
+      run: echo "::add-matcher::${{ github.workspace }}/.github/actions/problem-matcher/gcc.json"

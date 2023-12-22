@@ -26,6 +26,8 @@ jobs:
         submodules: true
     - name: Fixup Run actions/checkout
       run: git config --global --add safe.directory '*'
+    - name: Set up GCC problem matcher
+      uses: ./.github/actions/problem-matcher
     - name: Configure
       run: |
         . /opt/intel/oneapi/setvars.sh
