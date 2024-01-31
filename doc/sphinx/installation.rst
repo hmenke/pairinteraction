@@ -112,7 +112,7 @@ SWIG 3.0 or later
     Simplified Wrapper and Interface Generator to generate a Python
     interface from the C++ code.
 
-Python3
+Python
     The user interface is provided in Python scripting language.
 
 NumPy and Scipy
@@ -238,7 +238,7 @@ Afterwards you can start the program from the build directory
 
     $ ./pairinteraction
 
-For the GUI to work, you need Python3 with the packages ``numpy``,
+For the GUI to work, you need Python with the packages ``numpy``,
 ``scipy``, ``pint``, and ``pyqt5``.
 
 In order to use the pairinteraction Python 3 library,
@@ -312,7 +312,7 @@ Afterwards you can start the program from the build directory
 
     $ ./pairinteraction
 
-For the GUI to work, you need Python3 with the packages ``numpy``,
+For the GUI to work, you need Python with the packages ``numpy``,
 ``scipy``, ``pint``, and ``pyqt5``.
 
 In order to use the pairinteraction Python 3 library,

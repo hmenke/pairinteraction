@@ -176,7 +176,7 @@ if(WIN32)
 
 elseif(APPLE AND WITH_DMG)
 
-  find_package(Python3 COMPONENTS Interpreter REQUIRED)
+  find_package(Python COMPONENTS Interpreter REQUIRED)
 
   install(
     FILES ${CMAKE_SOURCE_DIR}/LICENSE.txt ${CMAKE_SOURCE_DIR}/LICENSE-3RD-PARTY.txt
@@ -194,7 +194,7 @@ elseif(APPLE AND WITH_DMG)
 
   add_custom_target(
     license
-    COMMAND ${Python3_EXECUTABLE} "${CMAKE_MACOSX_GOODIES_PATH}/licenseDMG.py" "${PROJECT_BINARY_DIR}/${CPACK_PACKAGE_FILE_NAME}.dmg" "${LICENSES}"
+    COMMAND ${Python_EXECUTABLE} "${CMAKE_MACOSX_GOODIES_PATH}/licenseDMG.py" "${PROJECT_BINARY_DIR}/${CPACK_PACKAGE_FILE_NAME}.dmg" "${LICENSES}"
   )
 
 elseif(UNIX)
