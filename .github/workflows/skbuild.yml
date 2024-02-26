@@ -61,6 +61,21 @@ jobs:
     - name: Install Windows dependencies
       if: runner.os == 'Windows'
       uses: ./.github/actions/setup-vcpkg
+      with:
+        args: >-
+          boost-algorithm
+          boost-math
+          boost-multi-index
+          boost-property-tree
+          boost-tokenizer
+          boost-uuid
+          cereal
+          doctest
+          eigen3
+          fmt
+          gsl
+          sqlite3[tool]
+          zeromq
 
     - name: Install macOS dependencies
       if: runner.os == 'macOS'

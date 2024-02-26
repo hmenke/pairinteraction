@@ -34,6 +34,21 @@ jobs:
 
       - name: Install Windows dependencies
         uses: ./.github/actions/setup-vcpkg
+        with:
+          args: >-
+            boost-algorithm
+            boost-math
+            boost-multi-index
+            boost-property-tree
+            boost-tokenizer
+            boost-uuid
+            cereal
+            doctest
+            eigen3
+            fmt
+            gsl
+            sqlite3[tool]
+            zeromq
 
       - uses: actions/setup-python@v5
         with:
