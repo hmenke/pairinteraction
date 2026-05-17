@@ -1,0 +1,191 @@
+name: Binary Installer
+
+'on':
+  workflow_run:
+    workflows: ["Python Wheel"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  installer-windows:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install Inno Setup
+        run: choco install innosetup --yes --no-progress
+
+      - name: Download Windows wheel artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dist-wheel-windows-2022
+          path: wheelhouse
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Install wheel and packaging tools
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          $wheelFile = Get-ChildItem -Path wheelhouse -Filter '*cp312*.whl' | Select-Object -ExpandProperty FullName -First 1
+          if (-not $wheelFile) {
+              throw 'No CPython 3.12-compatible wheel was found in wheelhouse.'
+          }
+          python -m pip install --only-binary=:all: pyinstaller "$wheelFile"
+
+      - name: Build frozen application
+        run: python tools/installer/build_pyinstaller.py
+
+      - name: Smoke test frozen application
+        run: python tools/installer/smoke_test.py "dist/installer/PairInteraction/PairInteraction.exe"
+
+      - name: Build Setup.exe
+        shell: pwsh
+        run: |
+          $version = python -c "import importlib.metadata; print(importlib.metadata.version('pairinteraction'))"
+          ./tools/installer/build_windows_installer.ps1 -SourceDir "dist/installer/PairInteraction" -Version "$version" -OutputDir "dist/installers"
+
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v7
+        with:
+          name: binary-installer-windows-x86_64
+          path: dist/installers/*.exe
+
+  installer-macos-arm64:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: macos-14
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Download macOS arm64 wheel artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dist-wheel-macos-14
+          path: wheelhouse
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Install wheel and packaging tools
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          wheel_file="$(python - <<'PY'
+          from pathlib import Path
+
+          wheel = next(iter(sorted(Path('wheelhouse').glob('*cp312*.whl'))), None)
+          if wheel is None:
+              raise SystemExit('No CPython 3.12-compatible wheel was found in wheelhouse.')
+          print(wheel)
+          PY
+          )"
+          python -m pip install --only-binary=:all: pyinstaller "$wheel_file"
+
+      - name: Build frozen application
+        run: python tools/installer/build_pyinstaller.py
+
+      - name: Smoke test frozen application
+        run: python tools/installer/smoke_test.py "dist/installer/PairInteraction.app/Contents/MacOS/PairInteraction"
+
+      - name: Build arm64 DMG
+        run: |
+          version="$(python - <<'PY'
+          import importlib.metadata
+
+          print(importlib.metadata.version('pairinteraction'))
+          PY
+          )"
+          bash tools/installer/build_macos_dmg.sh "dist/installer/PairInteraction.app" "$version" "arm64" "dist/installers"
+
+      - name: Upload macOS arm64 installer
+        uses: actions/upload-artifact@v7
+        with:
+          name: binary-installer-macos-arm64
+          path: dist/installers/*.dmg
+
+  installer-macos-x86_64:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: macos-15-intel
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Download macOS x86_64 wheel artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dist-wheel-macos-15-intel
+          path: wheelhouse
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Install wheel and packaging tools
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          wheel_file="$(python - <<'PY'
+          from pathlib import Path
+
+          wheel = next(iter(sorted(Path('wheelhouse').glob('*cp312*.whl'))), None)
+          if wheel is None:
+              raise SystemExit('No CPython 3.12-compatible wheel was found in wheelhouse.')
+          print(wheel)
+          PY
+          )"
+          python -m pip install --only-binary=:all: pyinstaller "$wheel_file"
+
+      - name: Build frozen application
+        run: python tools/installer/build_pyinstaller.py
+
+      - name: Smoke test frozen application
+        run: python tools/installer/smoke_test.py "dist/installer/PairInteraction.app/Contents/MacOS/PairInteraction"
+
+      - name: Build x86_64 DMG
+        run: |
+          version="$(python - <<'PY'
+          import importlib.metadata
+
+          print(importlib.metadata.version('pairinteraction'))
+          PY
+          )"
+          bash tools/installer/build_macos_dmg.sh "dist/installer/PairInteraction.app" "$version" "x86_64" "dist/installers"
+
+      - name: Upload macOS x86_64 installer
+        uses: actions/upload-artifact@v7
+        with:
+          name: binary-installer-macos-x86_64
+          path: dist/installers/*.dmg
